@@ -115,6 +115,43 @@ def update_book():
     
     conn.close()
 
+def search_book():
+    """
+    Searches for books in the database by title or author using fuzzy matching.
+    """
+    conn = get_db_connection()  # Get database connection
+    cursor = conn.cursor()
+    
+    # Get search criteria from user
+    title_query = input("Enter the book title to search (or leave blank to skip): ")
+    author_query = input("Enter the author name to search (or leave blank to skip): ")
+    
+    # Construct the SQL query with optional parameters
+    query = "SELECT title, author FROM books WHERE 1=1"
+    parameters = []
+
+    if title_query:
+        query += " AND title LIKE ?"
+        parameters.append(f"%{title_query}%")
+    
+    if author_query:
+        query += " AND author LIKE ?"
+        parameters.append(f"%{author_query}%")
+    
+    # Execute the query
+    cursor.execute(query, parameters)
+    results = cursor.fetchall()
+    
+    # Display the results
+    if results:
+        print("Search results:")
+        for result in results:
+            print(f"Title: {result[0]}, Author: {result[1]}")
+    else:
+        print("No books found matching your criteria.")
+    
+    conn.close()
+
 def remove_book():
     """
     Removes a book from the library database.

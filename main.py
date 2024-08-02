@@ -224,9 +224,10 @@ def main():
         print("2. Remove Book")
         print("3. View Books")
         print("4. Update Book")
-        print("5. Exit")
+        print("5. Search Book")
+        print("6. Exit")
 
-        choice = input("Enter your choice (1-5): ")
+        choice = input("Enter your choice (1-6): ")
         if choice == '1':
             add_book()
         elif choice == '2':
@@ -236,6 +237,8 @@ def main():
         elif choice == '4':
             update_book()
         elif choice == '5':
+            search_book()
+        elif choice == '6':
             print("Exiting the system.")
             break
         else:

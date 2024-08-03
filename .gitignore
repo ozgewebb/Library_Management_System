@@ -1,2 +1,14 @@
+# .gitignore
+
+# Python bytecode files
 __pycache__/
 *.pyc
+*.pyo
+
+# IDE/Editor-specific files
+.vscode/
+.idea/
+
+# Other files
+*.log
+*.db

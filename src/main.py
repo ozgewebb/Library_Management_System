@@ -1,10 +1,12 @@
-from library_management_system import functions
+from functions.book_management import add_book, remove_book, view_books, update_book, search_book
+from functions.user_management import add_user, update_user, remove_user, view_user
+from functions.db import create_database
 
 def main():
     """
     Main function to run the library management system.
     """
-    functions.create_database()
+    create_database()
     while True:
         print("\nWelcome to the library management system")
         print("1. Add Book")
@@ -20,23 +22,23 @@ def main():
 
         choice = input("Enter your choice (1-10): ")
         if choice == '1':
-            functions.add_book()
+            add_book()
         elif choice == '2':
-            functions.remove_book()
+            remove_book()
         elif choice == '3':
-            functions.view_books()
+            view_books()
         elif choice == '4':
-            functions.update_book()
+            update_book()
         elif choice == '5':
-            functions.search_book()
+            search_book()
         elif choice == '6':
-            functions.add_user()
+            add_user()
         elif choice == '7':
-            functions.update_user()
+            update_user()
         elif choice == '8':
-            functions.remove_user()
+            remove_user()
         elif choice == '9':
-            functions.view_user()
+            view_user()
         elif choice == '10':
             print("Exiting the system.")
             break
@@ -45,3 +47,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

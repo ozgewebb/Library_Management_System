@@ -213,38 +213,84 @@ def view_books():
         finally:
             conn.close()
 
-def main():
+def add_user():
     """
-    Main function to run the library management system.
+    Adds a new user to the users table in the database.
+    Prompts the user for username, password, and role.
     """
-    create_database()
-    while True:
-        print("\nWelcome to the library management system")
-        print("1. Add Book")
-        print("2. Remove Book")
-        print("3. View Books")
-        print("4. Update Book")
-        print("5. Search Book")
-        print("6. Exit")
+    conn = get_db_connection()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            username = input("Enter username: ")
+            password = input("Enter password: ")
+            role = input("Enter role: ")
 
-        choice = input("Enter your choice (1-6): ")
-        if choice == '1':
-            add_book()
-        elif choice == '2':
-            remove_book()
-        elif choice == '3':
-            view_books()
-        elif choice == '4':
-            update_book()
-        elif choice == '5':
-            search_book()
-        elif choice == '6':
-            print("Exiting the system.")
-            break
-        else:
-            print("Invalid choice. Please try again.")
+            cursor.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)", (username, password, role))
+            conn.commit()
+            print("User added successfully.")
+        except sqlite3.Error as e:
+            print(f"An error occurred: {e}")
+        finally:
+            conn.close()
 
-if __name__ == "__main__":
-    main()
+def view_user():
+    """
+    Displays all users in the library database.
+    """
+    conn = get_db_connection()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("SELECT user_id, username, role FROM users")
+            users = cursor.fetchall()
+            if users:
+                print("Users in the library:")
+                for user in users:
+                    print(f"User ID: {user[0]}, Username: {user[1]}, Role: {user[2]}")
+            else:
+                print("No users found in the database.")
+        except sqlite3.Error as e:
+            print(f"An error occurred: {e}")
+        finally:
+            conn.close()
 
+def update_user():
+    """
+    Updates the details of an existing user in the database.
+    """
+    conn = get_db_connection()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            user_id = input("Enter the User ID of the user you want to update: ")
+            new_username = input("Enter the new username for the user: ")
+            new_password = input("Enter the new password for the user: ")
+            new_role = input("Enter the new role for the user: ")
 
+            cursor.execute("UPDATE users SET username = ?, password = ?, role = ? WHERE user_id = ?", 
+                           (new_username, new_password, new_role, user_id))
+            conn.commit()
+            print("User updated successfully.")
+        except sqlite3.Error as e:
+            print(f"An error occurred: {e}")
+        finally:
+            conn.close()
+
+def remove_user():
+    """
+    Removes a user from the database.
+    """
+    conn = get_db_connection()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            user_id = input("Enter the User ID of the user to remove: ")
+
+            cursor.execute("DELETE FROM users WHERE user_id = ?", (user_id,))
+            conn.commit()
+            print("User removed successfully.")
+        except sqlite3.Error as e:
+            print(f"An error occurred: {e}")
+        finally:
+            conn.close()

@@ -1,17 +1,16 @@
 import requests
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+GOOGLE_BOOKS_API_KEY = os.getenv('GOOGLE_BOOKS_API_KEY')
 
 def fetch_books_from_google_books(query, max_results=10):
-    """
-    Fetch books from Google Books API based on a search query.
-    
-    :param query: Search query string
-    :param max_results: Maximum number of results to fetch
-    :return: List of books with title and author
-    """
     url = "https://www.googleapis.com/books/v1/volumes"
     params = {
         'q': query,
-        'maxResults': max_results
+        'maxResults': max_results,
+        'key': GOOGLE_BOOKS_API_KEY  # API key is added here
     }
     
     response = requests.get(url, params=params)
@@ -23,4 +22,3 @@ def fetch_books_from_google_books(query, max_results=10):
     else:
         print("Error fetching data from Google Books API")
         return []
-

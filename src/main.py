@@ -1,6 +1,15 @@
 from functions.book_management import add_book, remove_book, view_books, update_book, search_book
 from functions.user_management import add_user, update_user, remove_user, view_user
 from functions.db import create_database
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Retrieve the API key from environment variables
+GOOGLE_BOOKS_API_KEY = os.getenv('GOOGLE_BOOKS_API_KEY')
+
 
 def main():
     """

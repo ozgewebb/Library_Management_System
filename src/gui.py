@@ -1,91 +1,115 @@
-import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QMessageBox
+from PyQt5.QtWidgets import QMessageBox, QPushButton, QApplication, QMainWindow
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Library Management System GUI")
+        self.setWindowTitle('Library Management System')
         self.setGeometry(100, 100, 800, 600)
-        
-        # Set central widget and layout
-        central_widget = QWidget()
-        self.setCentralWidget(central_widget)
-        layout = QVBoxLayout()
-        central_widget.setLayout(layout)
-        
-        # Create and add buttons to the layout
-        self.add_button = QPushButton("Add Book")
-        self.update_button = QPushButton("Update Book")
-        self.view_button = QPushButton("View Books")
-        self.search_button = QPushButton("Search Book")
-        self.remove_button = QPushButton("Remove Book")
-        self.fetch_button = QPushButton("Fetch Books from Google Books")
-        self.save_button = QPushButton("Save Fetched Books to Database")
-        self.add_user_button = QPushButton("Add User")
-        self.update_user_button = QPushButton("Update User")
-        self.view_users_button = QPushButton("View Users")
-        self.search_user_button = QPushButton("Search User")
-        self.remove_user_button = QPushButton("Remove User")
-        
-        buttons = [self.add_button, self.update_button, self.view_button, self.search_button, 
-                   self.remove_button, self.fetch_button, self.save_button, self.add_user_button, 
-                   self.update_user_button, self.view_users_button, self.search_user_button, 
-                   self.remove_user_button]
 
-        for button in buttons:
-            layout.addWidget(button)
-       # Connect buttons to methods
-        self.add_button.clicked.connect(self.add_book)
-        self.update_button.clicked.connect(self.update_book)
-        self.view_button.clicked.connect(self.view_books)
-        self.search_button.clicked.connect(self.search_book)
-        self.remove_button.clicked.connect(self.remove_book)
-        self.fetch_button.clicked.connect(self.fetch_books)
-        self.save_button.clicked.connect(self.save_books)
-        self.add_user_button.clicked.connect(self.add_user)
-        self.update_user_button.clicked.connect(self.update_user)
-        self.view_users_button.clicked.connect(self.view_users)
-        self.search_user_button.clicked.connect(self.search_user)
-        self.remove_user_button.clicked.connect(self.remove_user)
+        # Add Book Button
+        self.add_book_button = QPushButton('Add Book', self)
+        self.add_book_button.setGeometry(50, 50, 200, 50)
+        self.add_book_button.clicked.connect(self.show_add_book_info)
 
-    def add_book(self):
-        QMessageBox.information(self, "Add Book", "Add Book functionality will be implemented here.")
+        # Update Book Button
+        self.update_book_button = QPushButton('Update Book', self)
+        self.update_book_button.setGeometry(50, 110, 200, 50)
+        self.update_book_button.clicked.connect(self.show_update_book_info)
 
-    def update_book(self):
-        QMessageBox.information(self, "Update Book", "Update Book functionality will be implemented here.")
+        # View Books Button
+        self.view_books_button = QPushButton('View Books', self)
+        self.view_books_button.setGeometry(50, 170, 200, 50)
+        self.view_books_button.clicked.connect(self.show_view_books_info)
 
-    def view_books(self):
-        QMessageBox.information(self, "View Books", "View Books functionality will be implemented here.")
+        # Search Book Button
+        self.search_book_button = QPushButton('Search Book', self)
+        self.search_book_button.setGeometry(50, 230, 200, 50)
+        self.search_book_button.clicked.connect(self.show_search_book_info)
 
-    def search_book(self):
-        QMessageBox.information(self, "Search Book", "Search Book functionality will be implemented here.")
+        # Remove Book Button
+        self.remove_book_button = QPushButton('Remove Book', self)
+        self.remove_book_button.setGeometry(50, 290, 200, 50)
+        self.remove_book_button.clicked.connect(self.show_remove_book_info)
 
-    def remove_book(self):
-        QMessageBox.information(self, "Remove Book", "Remove Book functionality will be implemented here.")
+        # Fetch Books from Google Books Button
+        self.fetch_books_button = QPushButton('Fetch Books Online', self)
+        self.fetch_books_button.setGeometry(50, 350, 200, 50)
+        self.fetch_books_button.clicked.connect(self.show_fetch_books_info)
 
-    def fetch_books(self):
-        QMessageBox.information(self, "Fetch Books", "Fetch Books functionality will be implemented here.")
+        # Save Fetched Books to Database Button
+        self.save_fetched_books_button = QPushButton('Save Fetched Books', self)
+        self.save_fetched_books_button.setGeometry(50, 410, 200, 50)
+        self.save_fetched_books_button.clicked.connect(self.show_save_fetched_books_info)
 
-    def save_books(self):
-        QMessageBox.information(self, "Save Books", "Save Books functionality will be implemented here.")
+        # Add User Button
+        self.add_user_button = QPushButton('Add User', self)
+        self.add_user_button.setGeometry(50, 470, 200, 50)
+        self.add_user_button.clicked.connect(self.show_add_user_info)
 
-    def add_user(self):
-        QMessageBox.information(self, "Add User", "Add User functionality will be implemented here.")
+        # Update User Button
+        self.update_user_button = QPushButton('Update User', self)
+        self.update_user_button.setGeometry(50, 530, 200, 50)
+        self.update_user_button.clicked.connect(self.show_update_user_info)
 
-    def update_user(self):
-        QMessageBox.information(self, "Update User", "Update User functionality will be implemented here.")
+        # View Users Button
+        self.view_users_button = QPushButton('View Users', self)
+        self.view_users_button.setGeometry(50, 590, 200, 50)
+        self.view_users_button.clicked.connect(self.show_view_users_info)
 
-    def view_users(self):
-        QMessageBox.information(self, "View Users", "View Users functionality will be implemented here.")
+        # Search User Button
+        self.search_user_button = QPushButton('Search User', self)
+        self.search_user_button.setGeometry(50, 650, 200, 50)
+        self.search_user_button.clicked.connect(self.show_search_user_info)
 
-    def search_user(self):
-        QMessageBox.information(self, "Search User", "Search User functionality will be implemented here.")
+        # Remove User Button
+        self.remove_user_button = QPushButton('Remove User', self)
+        self.remove_user_button.setGeometry(50, 710, 200, 50)
+        self.remove_user_button.clicked.connect(self.show_remove_user_info)
 
-    def remove_user(self):
-        QMessageBox.information(self, "Remove User", "Remove User functionality will be implemented here.")
+    def show_add_book_info(self):
+        self.show_info("Add Book", "Add Book button clicked.")
 
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = MainWindow()
-    window.show()
-    sys.exit(app.exec_())
+    def show_update_book_info(self):
+        self.show_info("Update Book", "Update Book button clicked.")
+
+    def show_view_books_info(self):
+        self.show_info("View Books", "View Books button clicked.")
+
+    def show_search_book_info(self):
+        self.show_info("Search Book", "Search Book button clicked.")
+
+    def show_remove_book_info(self):
+        self.show_info("Remove Book", "Remove Book button clicked.")
+
+    def show_fetch_books_info(self):
+        self.show_info("Fetch Books from Google Books", "Fetch Books button clicked.")
+
+    def show_save_fetched_books_info(self):
+        self.show_info("Save Fetched Books to Database", "Save Fetched Books button clicked.")
+
+    def show_add_user_info(self):
+        self.show_info("Add User", "Add User button clicked.")
+
+    def show_update_user_info(self):
+        self.show_info("Update User", "Update User button clicked.")
+
+    def show_view_users_info(self):
+        self.show_info("View Users", "View Users button clicked.")
+
+    def show_search_user_info(self):
+        self.show_info("Search User", "Search User button clicked.")
+
+    def show_remove_user_info(self):
+        self.show_info("Remove User", "Remove User button clicked.")
+
+    def show_info(self, title, message):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Information)
+        msg.setText(message)
+        msg.setWindowTitle(title)
+        msg.exec_()
+
+app = QApplication([])
+window = MainWindow()
+window.show()
+app.exec_()

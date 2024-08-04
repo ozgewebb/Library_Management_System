@@ -1,0 +1,83 @@
+import unittest
+from unittest.mock import patch, MagicMock
+from src.functions.user_management import add_user, update_user, remove_user, view_users, search_user
+from src.functions.db import get_db_connection
+import sqlite3
+
+class TestUserManagement(unittest.TestCase):
+
+    @patch('src.functions.user_management.get_db_connection')
+    @patch('builtins.input', side_effect=['TestUser', 'TestPass', 'admin'])
+    def test_add_user(self, mock_input, mock_get_db_connection):
+        mock_conn = MagicMock()
+        mock_cursor = MagicMock()
+        mock_get_db_connection.return_value = mock_conn
+        mock_conn.cursor.return_value = mock_cursor
+
+        add_user()
+
+        mock_cursor.execute.assert_called_with(
+            "INSERT INTO users (username, password, role) VALUES (?, ?, ?)",
+            ('TestUser', 'TestPass', 'admin')
+        )
+        mock_conn.commit.assert_called()
+
+    @patch('src.functions.user_management.get_db_connection')
+    @patch('builtins.input', side_effect=['1', 'NewUsername', 'NewPass', 'user'])
+    def test_update_user(self, mock_input, mock_get_db_connection):
+        mock_conn = MagicMock()
+        mock_cursor = MagicMock()
+        mock_get_db_connection.return_value = mock_conn
+        mock_conn.cursor.return_value = mock_cursor
+
+        update_user()
+
+        mock_cursor.execute.assert_called_with(
+            "UPDATE users SET username = ?, password = ?, role = ? WHERE user_id = ?",
+            ('NewUsername', 'NewPass', 'user', '1')
+        )
+        mock_conn.commit.assert_called()
+
+    @patch('src.functions.user_management.get_db_connection')
+    @patch('builtins.input', side_effect=['1'])
+    def test_remove_user(self, mock_input, mock_get_db_connection):
+        mock_conn = MagicMock()
+        mock_cursor = MagicMock()
+        mock_get_db_connection.return_value = mock_conn
+        mock_conn.cursor.return_value = mock_cursor
+
+        remove_user()
+
+        mock_cursor.execute.assert_called_with(
+            "DELETE FROM users WHERE user_id = ?",
+            ('1',)
+        )
+        mock_conn.commit.assert_called()
+
+    @patch('src.functions.user_management.get_db_connection')
+    def test_view_users(self, mock_get_db_connection):
+        mock_conn = MagicMock()
+        mock_cursor = MagicMock()
+        mock_get_db_connection.return_value = mock_conn
+        mock_conn.cursor.return_value = mock_cursor
+        mock_cursor.fetchall.return_value = [(1, 'TestUser', 'admin')]
+
+        with patch('builtins.print') as mock_print:
+            view_users()
+            mock_print.assert_any_call('Users in the library:')
+
+    @patch('src.functions.user_management.get_db_connection')
+    @patch('builtins.input', side_effect=['TestUser'])
+    def test_search_user(self, mock_input, mock_get_db_connection):
+        mock_conn = MagicMock()
+        mock_cursor = MagicMock()
+        mock_get_db_connection.return_value = mock_conn
+        mock_conn.cursor.return_value = mock_cursor
+        mock_cursor.fetchall.return_value = [(1, 'TestUser', 'admin')]
+
+        with patch('builtins.print') as mock_print:
+            search_user()
+            mock_print.assert_any_call('Search results:')
+
+if __name__ == '__main__':
+    unittest.main()

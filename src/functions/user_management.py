@@ -22,7 +22,7 @@ def add_user():
         finally:
             conn.close()
 
-def view_user():
+def view_users():
     """
     Displays all users in the library database.
     """
@@ -38,6 +38,28 @@ def view_user():
                     print(f"User ID: {user[0]}, Username: {user[1]}, Role: {user[2]}")
             else:
                 print("No users found in the database.")
+        except sqlite3.Error as e:
+            print(f"An error occurred: {e}")
+        finally:
+            conn.close()
+
+def search_user():
+    """
+    Searches for users in the library database.
+    """
+    conn = get_db_connection()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            search_query = input("Enter username to search: ")
+            cursor.execute("SELECT user_id, username, role FROM users WHERE username LIKE ?", ('%' + search_query + '%',))
+            users = cursor.fetchall()
+            if users:
+                print("Search results:")
+                for user in users:
+                    print(f"User ID: {user[0]}, Username: {user[1]}, Role: {user[2]}")
+            else:
+                print("No users found.")
         except sqlite3.Error as e:
             print(f"An error occurred: {e}")
         finally:

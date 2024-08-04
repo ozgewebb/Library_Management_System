@@ -14,7 +14,7 @@ def add_book():
         try:
             cursor = conn.cursor()
             title = input("Enter book title: ")
-            author = input("Enter book author: ")
+            authors = input("Enter book author: ")
 
             cursor.execute("SELECT title FROM books")
             existing_books = [row[0] for row in cursor.fetchall()]
@@ -24,7 +24,7 @@ def add_book():
             if any(score > 80 for title, score in similar_titles):
                 print("A book with a similar title already exists. Please choose a different title.")
             else:
-                cursor.execute("INSERT INTO books (title, author) VALUES (?, ?)", (title, author))
+                cursor.execute("INSERT INTO books (title, authors) VALUES (?, ?)", (title, authors))
                 conn.commit()
                 print("Book added successfully.")
         except sqlite3.Error as e:
@@ -78,7 +78,7 @@ def update_book():
         selected_title = matches[choice - 1][0]
         
         # Update the book record
-        cursor.execute("UPDATE books SET title = ?, author = ? WHERE title = ?", (new_title, new_author, selected_title))
+        cursor.execute("UPDATE books SET title = ?, authors = ? WHERE title = ?", (new_title, new_author, selected_title))
         conn.commit()
         
         print(f"Book '{selected_title}' updated successfully to '{new_title}' by {new_author}.")
@@ -99,7 +99,7 @@ def search_book():
     author_query = input("Enter the author name to search (or leave blank to skip): ")
     
     # Construct the SQL query with optional parameters
-    query = "SELECT title, author FROM books WHERE 1=1"
+    query = "SELECT title, authors FROM books WHERE 1=1"
     parameters = []
 
     if title_query:
@@ -107,7 +107,7 @@ def search_book():
         parameters.append(f"%{title_query}%")
     
     if author_query:
-        query += " AND author LIKE ?"
+        query += " AND authors LIKE ?"
         parameters.append(f"%{author_query}%")
     
     # Execute the query
@@ -150,8 +150,6 @@ def remove_book():
                 choice = int(input("Enter the number of the book to remove (0 to cancel): "))
                 if 0 < choice <= len(similar_titles):
                     chosen_title = similar_titles[choice - 1][0]
-                    
-                    # Onay mesajı
                     confirm = input(f"Are you sure you want to remove '{chosen_title}'? (yes/no): ")
                     if confirm.lower() == 'yes':
                         cursor.execute("DELETE FROM books WHERE title = ?", (chosen_title,))
@@ -178,7 +176,7 @@ def view_books():
     if conn:
         try:
             cursor = conn.cursor()
-            cursor.execute("SELECT id, title, author FROM books")
+            cursor.execute("SELECT id, title, authors FROM books")
             books = cursor.fetchall()
             if books:
                 print("Books in the library:")

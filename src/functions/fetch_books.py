@@ -2,7 +2,9 @@ import requests
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
+# Load environment variables from .env file
+load_dotenv(dotenv_path="src/config/.env")
+
 GOOGLE_BOOKS_API_KEY = os.getenv('GOOGLE_BOOKS_API_KEY')
 
 def fetch_books_from_google_books(query, max_results=10):
@@ -22,3 +24,5 @@ def fetch_books_from_google_books(query, max_results=10):
     else:
         print("Error fetching data from Google Books API")
         return []
+
+

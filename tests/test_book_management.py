@@ -17,7 +17,7 @@ class TestBookManagement(unittest.TestCase):
         add_book()
 
         mock_cursor.execute.assert_called_with(
-            "INSERT INTO books (title, author) VALUES (?, ?)",
+            "INSERT INTO books (title, authors) VALUES (?, ?)",
             ('Test Book', 'Test Author')
         )
         mock_conn.commit.assert_called()
@@ -34,7 +34,7 @@ class TestBookManagement(unittest.TestCase):
         update_book()
 
         mock_cursor.execute.assert_any_call(
-            "UPDATE books SET title = ?, author = ? WHERE title = ?",
+            "UPDATE books SET title = ?, authors = ? WHERE title = ?",
             ('New Title', 'New Author', 'Old Title')
         )
         mock_conn.commit.assert_called()

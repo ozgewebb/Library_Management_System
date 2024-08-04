@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QMessageBox
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -34,6 +34,55 @@ class MainWindow(QMainWindow):
 
         for button in buttons:
             layout.addWidget(button)
+       # Connect buttons to methods
+        self.add_button.clicked.connect(self.add_book)
+        self.update_button.clicked.connect(self.update_book)
+        self.view_button.clicked.connect(self.view_books)
+        self.search_button.clicked.connect(self.search_book)
+        self.remove_button.clicked.connect(self.remove_book)
+        self.fetch_button.clicked.connect(self.fetch_books)
+        self.save_button.clicked.connect(self.save_books)
+        self.add_user_button.clicked.connect(self.add_user)
+        self.update_user_button.clicked.connect(self.update_user)
+        self.view_users_button.clicked.connect(self.view_users)
+        self.search_user_button.clicked.connect(self.search_user)
+        self.remove_user_button.clicked.connect(self.remove_user)
+
+    def add_book(self):
+        QMessageBox.information(self, "Add Book", "Add Book functionality will be implemented here.")
+
+    def update_book(self):
+        QMessageBox.information(self, "Update Book", "Update Book functionality will be implemented here.")
+
+    def view_books(self):
+        QMessageBox.information(self, "View Books", "View Books functionality will be implemented here.")
+
+    def search_book(self):
+        QMessageBox.information(self, "Search Book", "Search Book functionality will be implemented here.")
+
+    def remove_book(self):
+        QMessageBox.information(self, "Remove Book", "Remove Book functionality will be implemented here.")
+
+    def fetch_books(self):
+        QMessageBox.information(self, "Fetch Books", "Fetch Books functionality will be implemented here.")
+
+    def save_books(self):
+        QMessageBox.information(self, "Save Books", "Save Books functionality will be implemented here.")
+
+    def add_user(self):
+        QMessageBox.information(self, "Add User", "Add User functionality will be implemented here.")
+
+    def update_user(self):
+        QMessageBox.information(self, "Update User", "Update User functionality will be implemented here.")
+
+    def view_users(self):
+        QMessageBox.information(self, "View Users", "View Users functionality will be implemented here.")
+
+    def search_user(self):
+        QMessageBox.information(self, "Search User", "Search User functionality will be implemented here.")
+
+    def remove_user(self):
+        QMessageBox.information(self, "Remove User", "Remove User functionality will be implemented here.")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

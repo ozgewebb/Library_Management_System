@@ -1,0 +1,49 @@
+# tests/test_fetch_books.py
+import unittest
+from unittest.mock import patch, MagicMock
+from src.functions.fetch_books import fetch_books_from_google_books
+
+class TestFetchBooks(unittest.TestCase):
+
+    @patch('src.functions.fetch_books.requests.get')
+    def test_fetch_books_from_google_books(self, mock_get):
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            'items': [
+                {
+                    'volumeInfo': {
+                        'title': 'Test Book',
+                        'authors': ['Test Author']
+                    }
+                }
+            ]
+        }
+        mock_get.return_value = mock_response
+
+        books = fetch_books_from_google_books('test query')
+        self.assertEqual(len(books), 1)
+        self.assertEqual(books[0]['title'], 'Test Book')
+        self.assertEqual(books[0]['authors'], ['Test Author'])
+
+    @patch('src.functions.fetch_books.requests.get')
+    def test_fetch_books_from_google_books_no_results(self, mock_get):
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {}
+        mock_get.return_value = mock_response
+
+        books = fetch_books_from_google_books('test query')
+        self.assertEqual(books, [])
+
+    @patch('src.functions.fetch_books.requests.get')
+    def test_fetch_books_from_google_books_error(self, mock_get):
+        mock_response = MagicMock()
+        mock_response.status_code = 500
+        mock_get.return_value = mock_response
+
+        books = fetch_books_from_google_books('test query')
+        self.assertEqual(books, [])
+
+if __name__ == '__main__':
+    unittest.main()

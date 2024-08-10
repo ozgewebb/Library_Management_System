@@ -49,7 +49,7 @@ def main():
             books = fetch_books_from_google_books(query)
             for book in books:
                 print(f"Title: {book['title']}, Authors: {', '.join(book['authors'])}")
-        elif choice == '7':   # save fetched books option
+        elif choice == '7':   # Save fetched books option
             query = input("Enter a search query: ")
             books = fetch_books_from_google_books(query)
             if books:

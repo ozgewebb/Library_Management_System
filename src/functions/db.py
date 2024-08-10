@@ -8,26 +8,36 @@ def get_db_connection():
         conn = sqlite3.connect('library.db')
         return conn
     except sqlite3.Error as error:
-        print(f"Error while connecting to sqlite: {error}")
+        print(f"Error while connecting to SQLite: {error}")
         return None
 
 def create_database():
     """
-    Creates the books table in the library database if it doesn't already exist.
+    Creates the books and users tables in the library database if they don't already exist.
     """
     conn = get_db_connection()
     if conn:
         try:
             cursor = conn.cursor()
-            cursor.execute('''CREATE TABLE IF NOT EXISTS books
-                            (id INTEGER PRIMARY KEY,
-                            title TEXT,
-                            author TEXT)''')
-            cursor.execute('''CREATE TABLE IF NOT EXISTS users
-                            (user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                            username TEXT,
-                            password TEXT,
-                            role TEXT)''')
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS books (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    title TEXT NOT NULL,
+                    authors TEXT NOT NULL,
+                    description TEXT,
+                    published_date TEXT,
+                    isbn TEXT
+                )
+            ''')
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS users (
+                    user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    username TEXT NOT NULL UNIQUE,
+                    email TEXT NOT NULL UNIQUE,
+                    password TEXT NOT NULL,
+                    role TEXT NOT NULL
+                )
+            ''')
             conn.commit()
         except sqlite3.Error as e:
             print(f"An error occurred: {e}")

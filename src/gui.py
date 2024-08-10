@@ -1,4 +1,8 @@
-from PyQt5.QtWidgets import QMessageBox, QPushButton, QApplication, QMainWindow
+from PyQt5.QtWidgets import QMessageBox, QPushButton, QApplication, QMainWindow, QInputDialog, QTextEdit
+from functions.fetch_books import fetch_books_from_google_books
+from functions.db import get_db_connection, create_database
+from functions.book_management import add_book, remove_book, view_books, update_book, search_book
+from functions.user_management import add_user, update_user, remove_user, view_users, search_user
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -66,50 +70,131 @@ class MainWindow(QMainWindow):
         self.remove_user_button.setGeometry(50, 710, 200, 50)
         self.remove_user_button.clicked.connect(self.show_remove_user_info)
 
+        # TextEdit widget for displaying information
+        self.info_text = QTextEdit(self)
+        self.info_text.setGeometry(300, 50, 450, 500)
+        self.info_text.setReadOnly(True)
+
+        # Create the database tables if they do not exist
+        create_database()
+
     def show_add_book_info(self):
-        self.show_info("Add Book", "Add Book button clicked.")
+        title, ok = QInputDialog.getText(self, 'Add Book', 'Enter title:')
+        if ok and title:
+            authors, ok = QInputDialog.getText(self, 'Add Book', 'Enter authors:')
+            if ok and authors:
+                description, ok = QInputDialog.getText(self, 'Add Book', 'Enter description:')
+                if ok and description:
+                    published_date, ok = QInputDialog.getText(self, 'Add Book', 'Enter published date:')
+                    if ok and published_date:
+                        isbn, ok = QInputDialog.getText(self, 'Add Book', 'Enter ISBN:')
+                        if ok and isbn:
+                            add_book(title, authors, description, published_date, isbn)
+                            self.show_info("Success", "Book added successfully.")
 
     def show_update_book_info(self):
-        self.show_info("Update Book", "Update Book button clicked.")
+        update_book()  # Call the update_book function
+        self.show_info("Update Book", "Update Book action performed.")
 
     def show_view_books_info(self):
-        self.show_info("View Books", "View Books button clicked.")
+        books = view_books()  # Call the view_books function
+        if books:
+            book_info = "\n".join([f"ID: {book['id']}, Title: {book['title']}, Authors: {book['authors']}" for book in books])
+        else:
+            book_info = "No books found in the library."
+    
+        self.info_text.setPlainText(book_info)
 
     def show_search_book_info(self):
-        self.show_info("Search Book", "Search Book button clicked.")
+        query, ok = QInputDialog.getText(self, 'Search Book', 'Enter search term:')
+        if ok and query:
+            books = search_book(query)  # Call the search_book function
+            if books:
+                book_info = "\n".join([f"Title: {book['title']}, Authors: {book['authors']}" for book in books])
+                self.info_text.setPlainText(book_info)
+            else:
+                self.show_info("No Books Found", "No books found matching the search term.")
 
     def show_remove_book_info(self):
-        self.show_info("Remove Book", "Remove Book button clicked.")
+        query, ok = QInputDialog.getText(self, 'Remove Book', 'Enter book title to remove:')
+        if ok and query:
+            remove_book(query)  # Call the remove_book function
+            self.show_info("Remove Book", "Remove Book action performed.")
 
     def show_fetch_books_info(self):
-        self.show_info("Fetch Books from Google Books", "Fetch Books button clicked.")
+        query, ok = QInputDialog.getText(self, 'Fetch Books', 'Enter search term:')
+        if ok and query:
+            books = fetch_books_from_google_books(query)  # Fetch books
+            if books:
+                book_info = "\n".join([f"Title: {book['title']}, Authors: {', '.join(book['authors'])}" for book in books])
+                self.info_text.setPlainText(book_info)
+                self.fetched_books = books  # Store fetched books
+            else:
+                self.show_info("No Books Found", "No books found for the given search term.")
 
     def show_save_fetched_books_info(self):
-        self.show_info("Save Fetched Books to Database", "Save Fetched Books button clicked.")
+        if hasattr(self, 'fetched_books') and self.fetched_books:
+            conn = get_db_connection()
+            if conn:
+                cursor = conn.cursor()
+                for book in self.fetched_books:
+                    cursor.execute('INSERT INTO books (title, authors) VALUES (?, ?)',
+                                   (book['title'], ', '.join(book['authors'])))
+                conn.commit()
+                conn.close()
+                self.show_info("Success", "Books saved to database.")
+        else:
+            self.show_info("No Books to Save", "No books available to save.")
 
     def show_add_user_info(self):
-        self.show_info("Add User", "Add User button clicked.")
+        username, ok = QInputDialog.getText(self, 'Add User', 'Enter username:')
+        if ok and username:
+            password, ok = QInputDialog.getText(self, 'Add User', 'Enter password:')
+            if ok and password:
+                email, ok = QInputDialog.getText(self, 'Add User', 'Enter email:')
+                if ok and email:
+                    role, ok = QInputDialog.getText(self, 'Add User', 'Enter role:')
+                    if ok and role:
+                        add_user(username, password, email, role)
+                        self.show_info("Success", "User added successfully.")
 
     def show_update_user_info(self):
-        self.show_info("Update User", "Update User button clicked.")
+        update_user()  # Call the update_user function
+        self.show_info("Update User", "Update User action performed.")
 
     def show_view_users_info(self):
-        self.show_info("View Users", "View Users button clicked.")
+        users = view_users()  # Call the view_users function
+        if users:
+            user_info = "\n".join([f"Username: {user['username']}, Role: {user['role']}" for user in users])
+        else:
+            user_info = "No users found in the database."
+    
+        self.info_text.setPlainText(user_info)
 
     def show_search_user_info(self):
-        self.show_info("Search User", "Search User button clicked.")
+        query, ok = QInputDialog.getText(self, 'Search User', 'Enter search term:')
+        if ok and query:
+            users = search_user(query)  # Call the search_user function
+            if users:
+                user_info = "\n".join([f"Username: {user['username']}, Role: {user['role']}" for user in users])
+                self.info_text.setPlainText(user_info)
+            else:
+                self.show_info("No Users Found", "No users found matching the search term.")
 
     def show_remove_user_info(self):
-        self.show_info("Remove User", "Remove User button clicked.")
+        query, ok = QInputDialog.getText(self, 'Remove User', 'Enter username to remove:')
+        if ok and query:
+            remove_user(query)  # Call the remove_user function
+            self.show_info("Remove User", "Remove User action performed.")
 
     def show_info(self, title, message):
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Information)
-        msg.setText(message)
-        msg.setWindowTitle(title)
-        msg.exec_()
+        msg_box = QMessageBox(self)
+        msg_box.setWindowTitle(title)
+        msg_box.setText(message)
+        msg_box.exec_()
 
-app = QApplication([])
-window = MainWindow()
-window.show()
-app.exec_()
+if __name__ == '__main__':
+    app = QApplication([])
+    main_window = MainWindow()
+    main_window.show()
+    app.exec_()
